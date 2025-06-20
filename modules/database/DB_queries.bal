@@ -8,6 +8,15 @@ isolated function getUsersQuery() returns sql:ParameterizedQuery => `
     FROM 
         Users;
 `;
+isolated function getUserQuery(int userId) returns sql:ParameterizedQuery => `
+    SELECT
+        id,
+        name,
+        email
+    FROM
+        Users
+    WHERE id = ${userId};
+`;
 
 isolated function insertUserQuery(UserCreate payload) returns sql:ParameterizedQuery => `
     INSERT INTO  Users

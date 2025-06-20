@@ -17,6 +17,20 @@ public isolated function getUsers() returns User[]|sql:Error {
 
 }
 
+public  isolated function getUser(int userId) returns User|sql:Error {
+    // Execute the query to fetch a single user by ID.
+    User|sql:Error result = dbClient->queryRow(getUserQuery(userId));
+
+    // If the result is an error, return it.
+    if result is sql:Error {
+        return result;
+    }
+
+    // If the result is a User, return it.
+    return result;
+}
+
+
 public isolated function insertUser(UserCreate payload) returns sql:ExecutionResult|sql:Error {
     return dbClient->execute(insertUserQuery(payload));
 }

@@ -2,7 +2,7 @@ import ballerina_crud_application.database;
 import ballerina/http;
 import ballerina/sql;
 
-service / on new http:Listener(8081) {
+service / on new http:Listener(8080) {
 
 
         resource function get .() returns string {
@@ -23,6 +23,23 @@ service / on new http:Listener(8081) {
 
         // Return the response containing the list of Users.
         return response;
+    }
+
+
+    resource function get users/[int id]() returns database:User|http:InternalServerError {
+        // Call the getUser function to fetch data from the database.
+        database:User|error response = database:getUser(id);
+
+        // If there's an error while fetching, return an internal server error.
+        if response is error {
+            return <http:InternalServerError>{
+                body: string `Error while retrieving user with id ${id}`
+            };
+        }
+
+        // Return the response containing the User.
+        return response;
+        
     }
 
       resource function post newUsers( database:UserCreate User) returns http:Created|http:InternalServerError {
@@ -48,6 +65,7 @@ service / on new http:Listener(8081) {
         return http:NO_CONTENT;
 
     }
+    
 
 
     resource function patch updateUser/[int id](database:UserUpdate User) returns http:NoContent|http:InternalServerError  {
