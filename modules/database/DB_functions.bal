@@ -17,6 +17,20 @@ public isolated function getUsers() returns User[]|sql:Error {
 
 }
 
+public isolated function getUsersByName(string name) returns User[]|sql:Error {
+    // Execute the query to fetch users by name.
+    stream<User, sql:Error?> resultStream = dbClient->query(getUsersByNameQuery(name));
+
+    // Check if the result is a stream of user records.
+    if resultStream is stream<User> {
+        return from User user in resultStream
+            select user;
+    }
+
+    // If there is an error, return an error msg.
+    return error("Error when fetching the user by name");
+}
+
 public  isolated function getUser(int userId) returns User|sql:Error {
     // Execute the query to fetch a single user by ID.
     User|sql:Error result = dbClient->queryRow(getUserQuery(userId));

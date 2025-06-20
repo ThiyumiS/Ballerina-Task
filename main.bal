@@ -42,6 +42,27 @@ service / on new http:Listener(8080) {
         
     }
 
+    resource function get searchUsers/[string name]()  returns database:User[]|http:InternalServerError {
+        // Call the getUsers function to fetch data from the database.
+        database:User[]|error response = database:getUsers();
+
+        // If there's an error while fetching, return an internal server error.
+        if response is error {
+            return <http:InternalServerError>{
+                body: "Error while retrieving users"
+            };
+        }
+
+        // Filter the users based on the name.
+        database:User[] filteredUsers = from database:User user in response
+                                        where user.name == name
+                                        select user;
+
+        // Return the filtered users.
+        return filteredUsers;
+        
+    }
+
       resource function post newUsers( database:UserCreate User) returns http:Created|http:InternalServerError {
         sql:ExecutionResult|sql:Error response = database:insertUser(User);
         if response is error {
