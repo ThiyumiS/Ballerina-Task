@@ -1,4 +1,4 @@
-📋Ballerina CRUD Operations – User Management API
+📋 **Ballerina CRUD Operations – User Management API**
 
 This project is a simple RESTful API built using Ballerina that performs basic CRUD (Create, Read, Update, Delete) operations on a list of users.
 
@@ -17,11 +17,11 @@ Delete user
 
 📦 Technologies Used
 
-Ballerina (Swan Lake version)
+Ballerina 
 
 HTTP Module
 
-In-memory data storage (can be extended to SQL or NoSQL databases)
+In-memory data storage
 
 📡 API Endpoints
 
@@ -74,13 +74,10 @@ Run the project:
 bal run
 
 
-
-
 📌 Notes
 
 This is a basic example for learning purposes.
 
-You can enhance it by connecting to a real SQL database and adding input validation.
 
 👨‍💼 Author
 
