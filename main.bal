@@ -1,4 +1,5 @@
-import ballerina_crud_application.database;
+import ballerina_task.database;
+//import ballerina/task;
 import ballerina/http;
 import ballerina/sql;
 
@@ -9,7 +10,7 @@ service / on new http:Listener(8080) {
         return "Welcome to Ballerina CRUD application!!!";
     }
     
-    // Resource function to get all books.
+    // Resource function to get all users
     resource function get users() returns database:User[]|http:InternalServerError {
         // Call the getUsers function to fetch data from the database.
         database:User[]|error response = database:getUsers();
