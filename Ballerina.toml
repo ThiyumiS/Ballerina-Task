@@ -1,6 +1,6 @@
 [package]
 org = "thiyumi"
-name = "ballerina_crud_application"
+name = "ballerina_task" 
 version = "0.1.0"
 distribution = "2201.12.6"
 
