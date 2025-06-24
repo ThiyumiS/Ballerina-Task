@@ -3,6 +3,16 @@ import ballerina_task.database;
 import ballerina/http;
 import ballerina/sql;
 
+// // Create a CORS config
+@http:ServiceConfig {
+    cors: {
+        allowOrigins: ["http://localhost:3000"],
+        allowCredentials: false,
+        allowHeaders: ["Content-Type"],
+        allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+    }
+}
+
 service / on new http:Listener(8080) {
 
 

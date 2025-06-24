@@ -1,14 +1,46 @@
-const API_BASE = "HTTP://localhost:8080/users"; //ballerina backend
+import React, { useState, useEffect } from "react";
+import { getAllUsers } from "../services/api";
 
-export async function addUser(user) {
-  return fetch(`${API_BASE}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(user),
-  });
-}
+const UserList = () => {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-export async function getAllUsers() {
-  const res = await fetch(`${API_BASE}`);
-  return res.json();
-}
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        console.log("Fetching users from API...");
+        const userData = await getAllUsers();
+        console.log("Received user data:", userData);
+        setUsers(userData);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error details:", err);
+        setError(`Failed to fetch users: ${err.message}`);
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  if (loading) return <div>Loading users...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <div className="user-list">
+      <h2>Users</h2>
+      {users.length === 0 ? (
+        <p>No users found</p>
+      ) : (
+        <ul>
+          {users.map((user, index) => (
+            <li key={index}>{JSON.stringify(user)}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+export default UserList;
