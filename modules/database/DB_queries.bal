@@ -1,5 +1,6 @@
 import ballerina/sql;
 
+//module contains SQL queries for the Users table
 isolated function getUsersQuery() returns sql:ParameterizedQuery => `
     SELECT 
         id,
