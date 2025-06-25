@@ -1,9 +1,10 @@
+// sort the imports.
 import ballerina_task.database;
-//import ballerina/task;
+
 import ballerina/http;
 import ballerina/sql;
 
-// // Create a CORS config
+//Create a CORS config(connected the frontend with the backend).
 @http:ServiceConfig {
     cors: {
         allowOrigins: ["http://localhost:3000"],
@@ -15,11 +16,10 @@ import ballerina/sql;
 
 service / on new http:Listener(8080) {
 
-
-        resource function get .() returns string {
+    resource function get .() returns string {
         return "Welcome to Ballerina CRUD application!!!";
     }
-    
+
     // Resource function to get all users
     resource function get users() returns database:User[]|http:InternalServerError {
         // Call the getUsers function to fetch data from the database.
@@ -36,7 +36,6 @@ service / on new http:Listener(8080) {
         return response;
     }
 
-
     resource function get users/[int id]() returns database:User|http:InternalServerError {
         // Call the getUser function to fetch data from the database.
         database:User|error response = database:getUser(id);
@@ -50,10 +49,10 @@ service / on new http:Listener(8080) {
 
         // Return the response containing the User.
         return response;
-        
+
     }
 
-    resource function get searchUsers/[string name]()  returns database:User[]|http:InternalServerError {
+    resource function get searchUsers/[string name]() returns database:User[]|http:InternalServerError {
         // Call the getUsers function to fetch data from the database.
         database:User[]|error response = database:getUsers();
 
@@ -66,15 +65,15 @@ service / on new http:Listener(8080) {
 
         // Filter the users based on the name.
         database:User[] filteredUsers = from database:User user in response
-                                        where user.name == name
-                                        select user;
+            where user.name == name
+            select user;
 
         // Return the filtered users.
         return filteredUsers;
-        
+
     }
 
-      resource function post newUsers( database:UserCreate User) returns http:Created|http:InternalServerError {
+    resource function post newUsers(database:UserCreate User) returns http:Created|http:InternalServerError {
         sql:ExecutionResult|sql:Error response = database:insertUser(User);
         if response is error {
             return <http:InternalServerError>{
@@ -83,7 +82,6 @@ service / on new http:Listener(8080) {
         }
         return http:CREATED;
     }
-
 
     resource function delete delUsers/[int id]() returns http:NoContent|http:InternalServerError {
         sql:ExecutionResult|sql:Error response = database:deleteUser(id);
@@ -97,19 +95,17 @@ service / on new http:Listener(8080) {
         return http:NO_CONTENT;
 
     }
-    
 
-
-    resource function patch updateUser/[int id](database:UserUpdate User) returns http:NoContent|http:InternalServerError  {
+    resource function patch updateUser/[int id](database:UserUpdate User) returns http:NoContent|http:InternalServerError {
         sql:ExecutionResult|sql:Error response = database:updateUser(id, User);
 
         if response is error {
             return <http:InternalServerError>{
-                body: string `Error while updating user with id ${id}` 
+                body: string `Error while updating user with id ${id}`
             };
         }
 
-        return  http:NO_CONTENT;
+        return http:NO_CONTENT;
 
     }
 
