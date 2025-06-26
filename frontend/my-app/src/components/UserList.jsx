@@ -24,6 +24,15 @@ const UserList = () => {
     fetchUsers();
   }, []);
 
+  // Define the onEditUser function
+  const onEditUser = (userId) => {
+    console.log(`Editing user with ID: ${userId}`);
+    // Add your edit user logic here
+    // For example, you could navigate to an edit page:
+    // history.push(`/users/edit/${userId}`);
+    // Or you could set a state to show an edit form
+  };
+
   if (loading) return <div>Loading users...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -33,11 +42,28 @@ const UserList = () => {
       {users.length === 0 ? (
         <p>No users found</p>
       ) : (
-        <ul>
-          {users.map((user, index) => (
-            <li key={index}>{JSON.stringify(user)}</li>
-          ))}
-        </ul>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>
+                  <button onClick={() => onEditUser(user.id)}>Edit</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
