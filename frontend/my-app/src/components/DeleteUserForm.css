@@ -1,0 +1,46 @@
+/* File: frontend/my-app/src/components/DeleteUserForm.css */
+.delete-user-form {
+  max-width: 500px;
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.warning {
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.delete-button {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #b71c1c;
+}
+
+.cancel-button {
+  background-color: #757575;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #616161;
+}
+
+.error-message {
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}

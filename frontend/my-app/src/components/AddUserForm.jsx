@@ -5,6 +5,7 @@
 //
 import { useState } from "react";
 import { addUser } from "../services/api";
+import "./AddUserForm.css";
 
 function AddUserForm() {
   // 1. Setup state for name and email
@@ -21,7 +22,7 @@ function AddUserForm() {
     setEmail("");
 
     try {
-      await addUser({ name, email });
+      await addUser(name, email);
       console.log("User added successfully!");
       setName("");
       setEmail("");

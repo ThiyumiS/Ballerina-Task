@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { updateUser, getUserById } from "../services/api";
+import "./UpdateUserForm.css";
 
 function UpdateUserForm({ userId, onUpdateSuccess, onCancel }) {
   const [name, setName] = useState("");

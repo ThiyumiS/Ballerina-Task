@@ -17,7 +17,7 @@ export async function getAllUsers() {
 
 export async function addUser(name, email) {
   try {
-    const res = await fetch(`${API_BASE}/users`, {
+    const res = await fetch(`${API_BASE}/newUsers`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -70,6 +70,23 @@ export async function updateUser(id, userData) {
     return await res.json();
   } catch (error) {
     console.error(`Error updating user ${id}:`, error);
+    throw error;
+  }
+}
+
+export async function deleteUser(id) {
+  try {
+    const res = await fetch(`${API_BASE}/delUsers/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error(`Error deleting user ${id}:`, error);
     throw error;
   }
 }
