@@ -67,6 +67,11 @@ function UpdateUserForm({ userId, onUpdateSuccess, onCancel }) {
 
       <form onSubmit={handleSubmit}>
         <div>
+          <label htmlFor="userId">User Id:</label>
+          <p id="user-id">{userId}</p>
+        </div>
+
+        <div>
           <label htmlFor="name">Name:</label>
           <input
             type="text"
@@ -86,6 +91,7 @@ function UpdateUserForm({ userId, onUpdateSuccess, onCancel }) {
             required
           />
         </div>
+
         <div className="button-group">
           <button type="submit" className="update-button">
             Update User

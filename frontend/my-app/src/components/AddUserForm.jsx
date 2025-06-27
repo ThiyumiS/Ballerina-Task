@@ -1,8 +1,3 @@
-// 1. Setup state for name and email
-// 2. Create submit handler function
-// 3. Create input fields with value and onChange
-// 4. Add submit button that triggers the handler
-//
 import { useState } from "react";
 import { addUser } from "../services/api";
 import "./AddUserForm.css";

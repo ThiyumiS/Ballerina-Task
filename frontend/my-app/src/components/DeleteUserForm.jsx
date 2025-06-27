@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { deleteUser } from "../services/api";
-import "./DeleteUserForm.css"; // You'll need to create this
+import "./DeleteUserForm.css";
 
 function DeleteUserForm({ userId, userName, onDeleteSuccess, onCancel }) {
   const [isDeleting, setIsDeleting] = useState(false);

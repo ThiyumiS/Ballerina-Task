@@ -44,13 +44,6 @@ function App() {
       <UserList key={refreshTrigger} onEditUser={handleEditUser} />
 
       {/* Remove this section as it's already handled inside UserList */}
-      {/* {selectedUserId && (
-        <DeleteUserForm
-          userId={selectedUserId}
-          onDeleteSuccess={handleUserUpdated}
-          onCancel={handleCancelUpdate}
-        />
-      )} */}
 
       <footer>
         <p>© 2023 User Management App</p>

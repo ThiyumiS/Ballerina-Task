@@ -29,14 +29,17 @@ export async function addUser(name, email) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
 
+    // For 201 Created responses without content, return a success object
+    if (res.status === 201 && res.headers.get("content-length") === "0") {
+      return { success: true };
+    }
+
     return await res.json();
   } catch (error) {
     console.error("Error adding user:", error);
     throw error;
   }
 }
-
-// ...existing code...
 
 export async function getUserById(id) {
   try {
@@ -67,6 +70,12 @@ export async function updateUser(id, userData) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
 
+    // For 204 No Content responses, just return a success object
+    if (res.status === 204) {
+      return { success: true };
+    }
+
+    // Only try to parse JSON for responses that have content
     return await res.json();
   } catch (error) {
     console.error(`Error updating user ${id}:`, error);
@@ -84,6 +93,12 @@ export async function deleteUser(id) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
 
+    // // For 204 No Content responses, just return a success object
+    // if (res.status === 204) {
+    //   return { success: true };
+    // }
+
+    // Only try to parse JSON for responses that have content
     return await res.json();
   } catch (error) {
     console.error(`Error deleting user ${id}:`, error);
