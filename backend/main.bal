@@ -73,39 +73,86 @@ service / on new http:Listener(8080) {
 
     }
 
-    resource function post newUsers(database:UserCreate User) returns http:Created|http:InternalServerError {
+    resource function post newUsers(database:UserCreate User) returns json|http:InternalServerError {
         sql:ExecutionResult|sql:Error response = database:insertUser(User);
         if response is error {
             return <http:InternalServerError>{
-                body: "Error while inserting an User"
+                // body: "Error while inserting an User"
+
+                body: {
+                    "success": false,
+                    "message": "Error while inserting an User"
+                }
             };
+
         }
-        return http:CREATED;
+
+        // Extract the generated ID from the response
+        int|string generatedId = 0;
+        if (response is sql:ExecutionResult) {
+            anydata|error lastInsertId = response.lastInsertId;
+            if (lastInsertId is int) {
+                generatedId = lastInsertId;
+            } else if (lastInsertId is string) {
+                generatedId = lastInsertId;
+            }
+        }
+
+        // Return JSON response with success status, message and the created user
+        return {
+            "success": true,
+            "message": "User created successfully",
+            "user": {
+                "id": generatedId,
+                "name": User.name,
+                "email": User.email
+            }
+        };
+
     }
 
-    resource function delete delUsers/[int id]() returns http:NoContent|http:InternalServerError {
+    resource function delete delUsers/[int id]() returns json|http:InternalServerError {
         sql:ExecutionResult|sql:Error response = database:deleteUser(id);
 
         if response is error {
             return <http:InternalServerError>{
-                body: "Error while deleting book"
+                body: {
+                    "success": false,
+                    "message": "Error while deleting user"
+                }
             };
         }
 
-        return http:NO_CONTENT;
+        // Return JSON response with success status and message
+        return {
+            "success": true,
+            "message": string `User with id ${id} was successfully deleted`
+        };
 
     }
 
-    resource function patch updateUser/[int id](database:UserUpdate User) returns http:NoContent|http:InternalServerError {
+    resource function patch updateUser/[int id](database:UserUpdate User) returns json|http:InternalServerError {
         sql:ExecutionResult|sql:Error response = database:updateUser(id, User);
 
         if response is error {
             return <http:InternalServerError>{
-                body: string `Error while updating user with id ${id}`
+                body: {
+                    "success": false,
+                    "message": string `Error while updating user with id ${id}`
+                }
             };
         }
 
-        return http:NO_CONTENT;
+        // Return JSON response with success status and message
+        return {
+            "success": true,
+            "message": string `User with id ${id} was successfully updated`,
+            "updatedUser": {
+                "id": id,
+                "name": User.name,
+                "email": User.email
+            }
+        };
 
     }
 

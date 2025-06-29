@@ -29,10 +29,10 @@ export async function addUser(name, email) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
 
-    // For 201 Created responses without content, return a success object
-    if (res.status === 201 && res.headers.get("content-length") === "0") {
-      return { success: true };
-    }
+    // // For 201 Created responses without content, return a success object
+    // if (res.status === 201 && res.headers.get("content-length") === "0") {
+    //   return { success: true };
+    // }
 
     return await res.json();
   } catch (error) {
@@ -70,10 +70,10 @@ export async function updateUser(id, userData) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
 
-    // For 204 No Content responses, just return a success object
-    if (res.status === 204) {
-      return { success: true };
-    }
+    // // For 204 No Content responses, just return a success object
+    // if (res.status === 204) {
+    //   return { success: true };
+    // }
 
     // Only try to parse JSON for responses that have content
     return await res.json();
@@ -93,12 +93,7 @@ export async function deleteUser(id) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
 
-    // // For 204 No Content responses, just return a success object
-    // if (res.status === 204) {
-    //   return { success: true };
-    // }
-
-    // Only try to parse JSON for responses that have content
+    // Parse the JSON response
     return await res.json();
   } catch (error) {
     console.error(`Error deleting user ${id}:`, error);
