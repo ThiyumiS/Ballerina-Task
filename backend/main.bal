@@ -86,16 +86,13 @@ service / on new http:Listener(8080) {
             };
 
         }
-
-        // Extract the generated ID from the response
+        // Extract the generated ID from the response (removed unnecessary condition)
         int|string generatedId = 0;
-        if (response is sql:ExecutionResult) {
-            anydata|error lastInsertId = response.lastInsertId;
-            if (lastInsertId is int) {
-                generatedId = lastInsertId;
-            } else if (lastInsertId is string) {
-                generatedId = lastInsertId;
-            }
+        anydata|error lastInsertId = response.lastInsertId;
+        if (lastInsertId is int) {
+            generatedId = lastInsertId;
+        } else if (lastInsertId is string) {
+            generatedId = lastInsertId;
         }
 
         // Return JSON response with success status, message and the created user
