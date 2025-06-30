@@ -10,6 +10,13 @@ function App() {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
+  // Handler for when a user is successfully added
+  const handleUserAdded = () => {
+    console.log("User was added successfully");
+    // Refresh the user list or perform other actions
+    setRefreshTrigger((prev) => prev + 1);
+  };
+
   // Handler for when a user is selected for editing
   const handleEditUser = (userId) => {
     setSelectedUserId(userId);
@@ -38,7 +45,7 @@ function App() {
           onCancel={handleCancelUpdate}
         />
       ) : (
-        <AddUserForm onUserAdded={handleUserUpdated} />
+        <AddUserForm onUserAdded={handleUserAdded} />
       )}
 
       <UserList key={refreshTrigger} onEditUser={handleEditUser} />
