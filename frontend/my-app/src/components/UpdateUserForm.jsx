@@ -79,6 +79,7 @@ function UpdateUserForm({ userId, onUpdateSuccess, onCancel }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            data-testid="name-input"
           />
         </div>
         <div>
@@ -89,11 +90,16 @@ function UpdateUserForm({ userId, onUpdateSuccess, onCancel }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            data-testid="email-input"
           />
         </div>
 
         <div className="button-group">
-          <button type="submit" className="update-button">
+          <button
+            type="submit"
+            className="update-button"
+            data-testid="submit-btn"
+          >
             Update User
           </button>
           {onCancel && (

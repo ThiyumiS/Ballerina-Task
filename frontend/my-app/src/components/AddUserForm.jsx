@@ -69,6 +69,7 @@ function AddUserForm({ onUserAdded }) {
           onChange={(e) => setName(e.target.value)}
           required
           disabled={isSubmitting}
+          data-testid="name-input"
         />
       </div>
 
@@ -81,10 +82,16 @@ function AddUserForm({ onUserAdded }) {
           onChange={(e) => setEmail(e.target.value)}
           required
           disabled={isSubmitting}
+          data-testid="email-input"
         />
       </div>
 
-      <button type="submit" disabled={isSubmitting} className="submit-button">
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="submit-button"
+        data-testid="submit-btn"
+      >
         {isSubmitting ? "Adding..." : "Add User"}
       </button>
     </form>

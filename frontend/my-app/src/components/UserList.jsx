@@ -137,6 +137,7 @@ const UserList = ({ onEditUser }) => {
                   <button
                     className="view-button"
                     onClick={() => handleViewUser(user.id)}
+                    data-testid={`view-user-btn-${user.id}`}
                   >
                     View
                   </button>
