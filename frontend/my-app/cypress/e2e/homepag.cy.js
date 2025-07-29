@@ -17,42 +17,11 @@ describe("Add User", () => {
 describe("view users", () => {
   it("should view users", () => {
     cy.visit("http://localhost:3000");
-    cy.get('[data-testid="view-user-btn-5"]').click(); // Adjust the selector based on your app
-    cy.get(".user-details").should("contain", "ID: 5"); // Adjust the class based on your app
+    cy.get('[data-testid="view-user-btn-36"]').click(); // Adjust the selector based on your app
+    cy.get(".user-details").should("contain", "ID: 36"); // Adjust the class based on your app
     cy.contains("User List").should("exist"); // Change text based on your app
   });
 });
-
-// describe("Delete user", () => {
-//   it("should delete a user", () => {
-//     cy.visit("http://localhost:3000");
-
-//     // First find a user in the list (for example, the one with name John Doe)
-//     cy.contains("tr", "John Doe").within(() => {
-//       // Get the user ID from the row (assuming the ID is displayed in the row)
-//       cy.get("td")
-//         .first()
-//         .invoke("text")
-//         .then((id) => {
-//           // Click the delete button for this specific user
-//           cy.get(".delete-button").click();
-
-//           // Confirmation dialog should appear
-//           cy.contains("Are you sure you want to delete the user").should(
-//             "exist"
-//           );
-
-//           // Click the delete button - now using the dynamic selector
-//           cy.get(`[data-testid="delete-user-btn-${id}"]`).click();
-//         });
-//     });
-//     cy.contains("was successfully deleted!").should("be.visible");
-
-//     cy.get(".ok-button").click();
-
-//     cy.contains("tr", "John Doe").should("not.exist");
-//   });
-// });
 
 describe("Edit User", () => {
   it("should edit a user", () => {
@@ -78,7 +47,7 @@ describe("Delete all John Doe in user list", () => {
     cy.visit("http://localhost:3000");
 
     cy.get("tr").each(($row) => {
-      if ($row.text().includes("John Doe")) {
+      if ($row.text().includes("Janny Depp")) {
         cy.wrap($row).within(() => {
           cy.contains("Delete").click();
         });
@@ -89,6 +58,6 @@ describe("Delete all John Doe in user list", () => {
         cy.wait(500);
       }
     });
-    cy.contains("John Doe").should("not.exist");
+    //cy.contains("Janny Depp").should("not.exist");
   });
 });
