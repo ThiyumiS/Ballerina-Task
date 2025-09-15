@@ -220,12 +220,14 @@ const UserList = ({ users = [], onDelete, onEdit, onView }) => {
                     <button
                       onClick={() => onEdit(user)}
                       className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                      data-testid="edit-user-btn"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => onDelete(user)}
                       className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                      data-testid="delete-user-btn"
                     >
                       Delete
                     </button>

@@ -30,7 +30,8 @@ function DeleteUserForm({ userId, userName, onDeleteSuccess, onCancel }) {
 
   return (
     <div className="max-w-lg mx-auto bg-white p-6 rounded-xl shadow-md border border-red-300">
-      <h2 className="text-2xl font-bold text-red-600 mb-4">Delete User</h2>
+      <h2 className="text-2xl font-bold text-red-600 mb-4">
+        Delete User</h2>
 
       {error && (
         <div className="mb-4 text-red-700 bg-red-100 p-3 rounded-md border border-red-300">
@@ -68,7 +69,7 @@ function DeleteUserForm({ userId, userName, onDeleteSuccess, onCancel }) {
               disabled={isDeleting}
               className={`px-5 py-2 rounded-md text-white font-semibold ${
                 isDeleting
-                  ? "bg-red-300 cursor-not-allowed"
+                  ? "bg-red-200 cursor-not-allowed"
                   : "bg-red-600 hover:bg-red-700"
               }`}
             >
