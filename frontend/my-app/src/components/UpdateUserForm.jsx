@@ -123,8 +123,8 @@ function UpdateUserForm({ userId, onUpdateSuccess, onCancel }) {
         <div className="flex justify-end gap-3">
           <button
             type="submit"
-            className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 py-2 rounded-md"
             data-testid="submit-btn"
+            className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 py-2 rounded-md"
           >
             Update User
           </button>

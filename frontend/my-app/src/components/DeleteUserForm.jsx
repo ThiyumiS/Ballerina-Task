@@ -67,6 +67,7 @@ function DeleteUserForm({ userId, userName, onDeleteSuccess, onCancel }) {
             <button
               onClick={handleDelete}
               disabled={isDeleting}
+              //data-testid="submit-btn"
               className={`px-5 py-2 rounded-md text-white font-semibold ${
                 isDeleting
                   ? "bg-red-200 cursor-not-allowed"
