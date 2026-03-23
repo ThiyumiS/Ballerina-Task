@@ -59,20 +59,17 @@ jobs:
       - name: Rename build folder with version
         working-directory: frontend/my-app
         run: |
-            mv build "build-${{ steps.versioning.outputs.tag }}"
-
-      - name: Pack only build folder
-        working-directory: frontend/my-app
-        run: |
-            tar -czf "frontend-build-${{ steps.versioning.outputs.tag }}.tar.gz" "build-${{ steps.versioning.outputs.tag }}"
+          mv build "build-${{ steps.versioning.outputs.tag }}"
+          ls -la
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-            tag_name: ${{ steps.versioning.outputs.tag }}
-            name: Release ${{ steps.versioning.outputs.tag }}
-            body: |
-                Frontend release for version ${{ steps.versioning.outputs.version }}.
-            files: frontend/my-app/frontend-build-${{ steps.versioning.outputs.tag }}.tar.gz
+          tag_name: ${{ steps.versioning.outputs.tag }}
+          name: Release ${{ steps.versioning.outputs.tag }}
+          body: |
+            Frontend release for version ${{ steps.versioning.outputs.version }}.
+            Build folder renamed in workflow run to:
+            frontend/my-app/build-${{ steps.versioning.outputs.tag }}
         env:
-            GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
