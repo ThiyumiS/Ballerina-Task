@@ -81,5 +81,5 @@ This is a basic example for learning purposes.
 
 👨‍💼 Author
 
-Your Nameyour.email@example.comLinkedIn | GitHub
+Your thiyumisasmitha@gmail.comLinkedIn | GitHub
 
