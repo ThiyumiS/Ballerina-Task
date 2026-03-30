@@ -61,7 +61,7 @@ DELETE
 
 Delete a user
 
-🔧 How to Run
+🔧 How to Run the project
 
 Make sure Ballerina is installed. Install Ballerina
 
