@@ -1,0 +1,12 @@
+{
+  "name": "dummy-app-1-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.js",
+    "start": "npm run build && node scripts/serve.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

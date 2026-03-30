@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sentence Word Counter</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f4f7f2;
+      }
+      .container {
+        max-width: 560px;
+        margin: 48px auto;
+        background: #ffffff;
+        border: 1px solid #d9e6d2;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 6px 20px rgba(40, 73, 29, 0.08);
+      }
+      h1 { margin-top: 0; }
+      textarea {
+        width: 100%;
+        min-height: 130px;
+        resize: vertical;
+        padding: 10px;
+        box-sizing: border-box;
+        margin-bottom: 12px;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background: #2c7d2e;
+        color: #fff;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      #result {
+        margin-top: 14px;
+        font-weight: bold;
+      }
+      .meta {
+        margin-top: 18px;
+        color: #5d6f57;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>App 2: Sentence Word Counter</h1>
+      <textarea id="sentence" placeholder="Type a sentence here..."></textarea>
+      <button id="count">Count Words</button>
+      <div id="result">Words: 0</div>
+      <div class="meta">version: 0.1.0</div>
+    </div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

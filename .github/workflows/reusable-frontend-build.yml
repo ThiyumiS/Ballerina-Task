@@ -1,0 +1,74 @@
+name: Reusable Frontend Build Release
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        required: true
+        type: string
+      app_path:
+        required: true
+        type: string
+      bump_type:
+        required: false
+        type: string
+        default: patch
+      node_version:
+        required: false
+        type: string
+        default: "20"
+      build_command:
+        required: false
+        type: string
+        default: npm run build
+      output_dir:
+        required: false
+        type: string
+        default: build
+    secrets:
+      REACT_APP_API_BASE:
+        required: false
+
+jobs:
+  release-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      BUILD_FILE: ${{ inputs.app_name }}-build-${{ github.run_number }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: npm
+          cache-dependency-path: ${{ inputs.app_path }}/package-lock.json
+
+      - name: Bump app version
+        id: version
+        run: |
+          chmod +x ./scripts/bump-version.sh
+          ./scripts/bump-version.sh "${{ inputs.app_path }}" "${{ inputs.bump_type }}"
+
+      - name: Build frontend
+        working-directory: ${{ inputs.app_path }}
+        env:
+          REACT_APP_API_BASE: ${{ secrets.REACT_APP_API_BASE }}
+        run: |
+          npm ci
+          ${{ inputs.build_command }}
+          mv "${{ inputs.output_dir }}" "$BUILD_FILE"
+          zip -r "$BUILD_FILE.zip" "$BUILD_FILE"
+
+      - name: Create release and upload build
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.app_name }}-v${{ steps.version.outputs.version }}
+          name: ${{ inputs.app_name }} v${{ steps.version.outputs.version }}
+          files: ${{ inputs.app_path }}/${{ env.BUILD_FILE }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
