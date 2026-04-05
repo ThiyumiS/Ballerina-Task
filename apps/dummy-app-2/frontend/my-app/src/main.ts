@@ -1,5 +1,5 @@
 export {};
-
+//senetence words counter app
 const textArea = document.getElementById(
   "sentence",
 ) as HTMLTextAreaElement | null;
