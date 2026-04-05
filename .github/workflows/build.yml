@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - frontend/my-app/**
+      - apps/crud-app/frontend/my-app/**
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
     uses: ./.github/workflows/reusable-frontend-build.yml
     with:
       app_name: my-app
-      app_path: frontend/my-app
+      app_path: apps/crud-app/frontend/my-app
       bump_type: patch
       node_version: "20"
       build_command: npm run build
