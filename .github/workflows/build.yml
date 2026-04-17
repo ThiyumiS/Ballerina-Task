@@ -1,22 +1,22 @@
 name: Build my-app
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
     paths:
       - apps/crud-app/frontend/my-app/**
-  workflow_dispatch:
 
 jobs:
   build:
+    if: github.event.pull_request.merged == true
     permissions:
       contents: write
     uses: ./.github/workflows/reusable-frontend-build.yml
     with:
       app_name: my-app
       app_path: apps/crud-app/frontend/my-app
-      bump_type: patch
       node_version: "20"
       build_command: npm run build
       output_dir: build

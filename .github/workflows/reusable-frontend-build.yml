@@ -30,13 +30,67 @@ on:
         required: false
 
 jobs:
-  release-build:
+  detect_version_bump:
+    name: Detect Version Bump
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    env:
-      BUILD_FILE: ${{ inputs.app_name }}-build-${{ github.run_number }}
+    outputs:
+      version: ${{ steps.detect.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
+      - name: Detect Version Bump from PR labels
+        id: detect
+        run: |
+          BUMP_TYPE="${{ inputs.bump_type }}"
+          LABELS='${{ toJSON(github.event.pull_request.labels.*.name) }}'
+          
+          if echo "$LABELS" | grep -q "MicroApp:major"; then
+            BUMP_TYPE="major"
+          elif echo "$LABELS" | grep -q "MicroApp:minor"; then
+            BUMP_TYPE="minor"
+          elif echo "$LABELS" | grep -q "MicroApp:patch"; then
+            BUMP_TYPE="patch"
+          fi
+          
+          APP_PREFIX="${{ inputs.app_name }}-v"
+          LATEST_TAG=$(git tag -l "${APP_PREFIX}*" | sort -V | tail -n 1)
+          
+          if [ -z "$LATEST_TAG" ]; then
+            MAJOR=1; MINOR=0; PATCH=0; BUILD=0
+          else
+            VERSION_STR=${LATEST_TAG#$APP_PREFIX}
+            VERSION_STR=${VERSION_STR//./_}
+            IFS='_' read -r MAJOR MINOR PATCH BUILD EXTRA <<< "$VERSION_STR"
+            MAJOR=${MAJOR:-1}
+            MINOR=${MINOR:-0}
+            PATCH=${PATCH:-0}
+            BUILD=${BUILD:-0}
+          fi
+          
+          if [ "$BUMP_TYPE" == "major" ]; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+            BUILD=0
+          elif [ "$BUMP_TYPE" == "minor" ]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+            BUILD=0
+          else
+            BUILD=$((BUILD + 1))
+          fi
+          
+          NEW_VERSION="${MAJOR}_${MINOR}_${PATCH}_${BUILD}"
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+  staging_build:
+    name: Staging Build
+    needs: detect_version_bump
+    runs-on: ubuntu-latest
+    environment: staging
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,11 +102,40 @@ jobs:
           cache: npm
           cache-dependency-path: ${{ inputs.app_path }}/package-lock.json
 
-      - name: Bump app version
-        id: version
+      - name: Build frontend
+        working-directory: ${{ inputs.app_path }}
+        env:
+          REACT_APP_API_BASE: ${{ secrets.REACT_APP_API_BASE }}
         run: |
-          chmod +x ./scripts/bump-version.sh
-          ./scripts/bump-version.sh "${{ inputs.app_path }}" "${{ inputs.bump_type }}"
+          npm ci
+          ${{ inputs.build_command }}
+          BUILD_FILE="${{ inputs.app_name }}-staging-v${{ needs.detect_version_bump.outputs.version }}"
+          mv "${{ inputs.output_dir }}" "$BUILD_FILE"
+          zip -r "$BUILD_FILE.zip" "$BUILD_FILE"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.app_name }}-staging-build
+          path: ${{ inputs.app_path }}/${{ inputs.app_name }}-staging-v${{ needs.detect_version_bump.outputs.version }}.zip
+
+  production_build:
+    name: Production Build
+    needs: [detect_version_bump, staging_build]
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: npm
+          cache-dependency-path: ${{ inputs.app_path }}/package-lock.json
 
       - name: Build frontend
         working-directory: ${{ inputs.app_path }}
@@ -61,14 +144,23 @@ jobs:
         run: |
           npm ci
           ${{ inputs.build_command }}
+          BUILD_FILE="${{ inputs.app_name }}-production-v${{ needs.detect_version_bump.outputs.version }}"
           mv "${{ inputs.output_dir }}" "$BUILD_FILE"
           zip -r "$BUILD_FILE.zip" "$BUILD_FILE"
 
-      - name: Create release and upload build
+      - name: Download Staging Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.app_name }}-staging-build
+          path: ${{ inputs.app_path }}
+
+      - name: Create release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.app_name }}-v${{ steps.version.outputs.version }}
-          name: ${{ inputs.app_name }} v${{ steps.version.outputs.version }}
-          files: ${{ inputs.app_path }}/${{ env.BUILD_FILE }}.zip
+          tag_name: ${{ inputs.app_name }}-v${{ needs.detect_version_bump.outputs.version }}
+          name: ${{ inputs.app_name }} v${{ needs.detect_version_bump.outputs.version }}
+          files: |
+            ${{ inputs.app_path }}/${{ inputs.app_name }}-staging-v${{ needs.detect_version_bump.outputs.version }}.zip
+            ${{ inputs.app_path }}/${{ inputs.app_name }}-production-v${{ needs.detect_version_bump.outputs.version }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

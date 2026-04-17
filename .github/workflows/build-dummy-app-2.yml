@@ -1,22 +1,22 @@
 name: Build dummy-app-2
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
     paths:
       - apps/dummy-app-2/frontend/my-app/**
-  workflow_dispatch:
 
 jobs:
   build:
+    if: github.event.pull_request.merged == true
     permissions:
       contents: write
     uses: ./.github/workflows/reusable-frontend-build.yml
     with:
       app_name: dummy-app-2
       app_path: apps/dummy-app-2/frontend/my-app
-      bump_type: patch
       node_version: "20"
       build_command: npm run build
       output_dir: build
